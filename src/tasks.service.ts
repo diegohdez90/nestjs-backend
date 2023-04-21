@@ -25,6 +25,15 @@ export class TasksService {
     return this.tasks.find((task) => task.id === id);
   }
 
+  updateStatusById(id: string, status: TaskStatus): Task | string {
+    const index = this.tasks.findIndex((task) => task.id === id);
+    if (index === -1) {
+      return 'Task cannot be found';
+    }
+    this.tasks[index].status = status;
+    return this.tasks[index];
+  }
+
   deleteById(id: string): string {
     const index = this.tasks.findIndex((task) => task.id === id);
     if (index > -1) {
