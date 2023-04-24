@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TasksController } from './tasks.controller';
-import { TasksService } from './tasks.service';
 import { DataSource } from 'typeorm';
 import { TasksModule } from './tasks.module';
 
