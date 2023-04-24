@@ -9,7 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import Task from './task.model';
+import { Task } from './task.entity';
 import { CreateTaskDtp } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -18,34 +18,34 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
-  @Get()
-  getTasks(@Query() getTasksFilter: GetTasksFilterDto): Task[] {
-    if (Object.keys(getTasksFilter).length) {
-      return this.tasksService.getByFilter(getTasksFilter);
-    }
-    return this.tasksService.getAll();
-  }
+  // @Get()
+  // getTasks(@Query() getTasksFilter: GetTasksFilterDto): Task[] {
+  //   if (Object.keys(getTasksFilter).length) {
+  //     return this.tasksService.getByFilter(getTasksFilter);
+  //   }
+  //   return this.tasksService.getAll();
+  // }
 
   @Post()
-  create(@Body() createTaskDtp: CreateTaskDtp): Task {
+  create(@Body() createTaskDtp: CreateTaskDtp): Promise<Task> {
     return this.tasksService.create(createTaskDtp);
   }
 
   @Get('/:id')
-  getById(@Param('id') id: string) {
+  getById(@Param('id') id: string): Promise<Task> {
     return this.tasksService.getById(id);
   }
 
-  @Patch('/:id')
-  updateById(
-    @Body() updateTask: UpdateTaskDto,
-    @Param('id') id: string,
-  ): Task | string {
-    return this.tasksService.updateStatusById(id, updateTask);
-  }
+  // @Patch('/:id')
+  // updateById(
+  //   @Body() updateTask: UpdateTaskDto,
+  //   @Param('id') id: string,
+  // ): Task | string {
+  //   return this.tasksService.updateStatusById(id, updateTask);
+  // }
 
-  @Delete('/:id')
-  delete(@Param('id') id: string): string {
-    return this.tasksService.deleteById(id);
-  }
+  // @Delete('/:id')
+  // delete(@Param('id') id: string): string {
+  //   return this.tasksService.deleteById(id);
+  // }
 }

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common/exceptions';
-import Task, { TaskStatus } from './task.model';
+import { TaskStatus } from './task.model';
 import { v4 as uuid } from 'uuid';
 import { CreateTaskDtp } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
@@ -12,7 +12,9 @@ import TaskRepository from './task.repository';
 
 @Injectable()
 export class TasksService {
-  constructor(@Inject(TaskRepository) private repository: TaskRepository) {}
+  constructor(@Inject(TaskRepository)
+    private readonly repository: TaskRepository,
+  ) {}
   // private tasks: Task[] = [];
   // getAll() {
   //   return this.tasks;
@@ -35,24 +37,28 @@ export class TasksService {
   //   return tasks;
   // }
 
-  // create(createTaskDtp: CreateTaskDtp): Task {
-  //   const task: Task = {
-  //     id: uuid(),
-  //     title: createTaskDtp.title,
-  //     description: createTaskDtp.description,
-  //     status: TaskStatus.OPEN,
-  //   };
-  //   this.tasks.push(task);
-  //   return task;
-  // }
+  async create(createTaskDtp: CreateTaskDtp): Promise<Task> {
+    const { title, description } = createTaskDtp;
+    const task = this.repository.create({
+      title: title,
+      description: description,
+      status: TaskStatus.OPEN,
+    });
+    await this.repository.save(task);
+    return task;
+  }
 
-  getById(id: string): Task {
-  //   const task = this.tasks.find((task) => task.id === id);
-  //   if (!task) {
-  //     throw new NotFoundException('Task not found!');
-  //   }
-  //   return task;
-  // }
+  async getById(id: string): Promise<Task> {
+    const task = await this.repository.findOne({
+      where: {
+        id: id,
+      },
+    });
+    if (!task) {
+      throw new NotFoundException('Task not found!');
+    }
+    return task;
+  }
 
   // updateStatusById(id: string, updateTask: UpdateTaskDto): Task {
   //   const { status } = updateTask;
