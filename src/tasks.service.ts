@@ -12,7 +12,8 @@ import TaskRepository from './task.repository';
 
 @Injectable()
 export class TasksService {
-  constructor(@Inject(TaskRepository)
+  constructor(
+    @Inject(TaskRepository)
     private readonly repository: TaskRepository,
   ) {}
   // private tasks: Task[] = [];
@@ -60,15 +61,12 @@ export class TasksService {
     return task;
   }
 
-  // updateStatusById(id: string, updateTask: UpdateTaskDto): Task {
-  //   const { status } = updateTask;
-  //   const index = this.tasks.findIndex((task) => task.id === id);
-  //   if (index === -1) {
-  //     throw new NotFoundException('Task not found to be updated!');
-  //   }
-  //   this.tasks[index].status = status;
-  //   return this.tasks[index];
-  // }
+  async updateStatusById(id: string, updateTask: UpdateTaskDto): Promise<Task> {
+    const { status } = updateTask;
+    const task = await this.getById(id);
+    task.status = status;
+    return await this.repository.save(task);
+  }
 
   async deleteById(id: string): Promise<void> {
     const result = await this.repository.delete(id);
