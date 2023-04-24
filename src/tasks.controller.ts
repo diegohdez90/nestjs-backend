@@ -44,8 +44,8 @@ export class TasksController {
   //   return this.tasksService.updateStatusById(id, updateTask);
   // }
 
-  // @Delete('/:id')
-  // delete(@Param('id') id: string): string {
-  //   return this.tasksService.deleteById(id);
-  // }
+  @Delete('/:id')
+  delete(@Param('id') id: string): void {
+    this.tasksService.deleteById(id);
+  }
 }

@@ -70,12 +70,10 @@ export class TasksService {
   //   return this.tasks[index];
   // }
 
-  // deleteById(id: string): string {
-  //   const index = this.tasks.findIndex((task) => task.id === id);
-  //   if (index > -1) {
-  //     this.tasks.splice(index, 1);
-  //     return 'Task deleted';
-  //   }
-  //   throw new NotFoundException('Task not found to be delete!');
-  // }
+  async deleteById(id: string): Promise<void> {
+    const result = await this.repository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException('Unable to find task to be deleted');
+    }
+  }
 }
