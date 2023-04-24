@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import User from './user.entity';
 import { AuthCredentialsDto } from 'src/dto/auth-credentials.dto';
+import { hash } from 'src/util/encrypt';
 
 @Injectable()
 class UserRepository extends Repository<User> {
@@ -15,10 +16,10 @@ class UserRepository extends Repository<User> {
 
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     const { username, password } = authCredentialsDto;
-
+    const password_hash = await hash(password);
     const user = this.create({
       username,
-      password,
+      password: password_hash,
     });
 
     try {
