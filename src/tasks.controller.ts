@@ -18,13 +18,10 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
-  // @Get()
-  // getTasks(@Query() getTasksFilter: GetTasksFilterDto): Task[] {
-  //   if (Object.keys(getTasksFilter).length) {
-  //     return this.tasksService.getByFilter(getTasksFilter);
-  //   }
-  //   return this.tasksService.getAll();
-  // }
+  @Get()
+  getTasks(@Query() getTasksFilter: GetTasksFilterDto): Promise<Task[]> {
+    return this.tasksService.getAll(getTasksFilter);
+  }
 
   @Post()
   create(@Body() createTaskDtp: CreateTaskDtp): Promise<Task> {

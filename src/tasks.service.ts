@@ -16,10 +16,10 @@ export class TasksService {
     @Inject(TaskRepository)
     private readonly repository: TaskRepository,
   ) {}
-  // private tasks: Task[] = [];
-  // getAll() {
-  //   return this.tasks;
-  // }
+
+  getAll(filter: GetTasksFilterDto): Promise<Task[]> {
+    return this.repository.getTasks(filter);
+  }
 
   // getByFilter(filter: GetTasksFilterDto): Task[] {
   //   const { status, search } = filter;
