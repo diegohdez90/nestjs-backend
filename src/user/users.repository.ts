@@ -1,12 +1,14 @@
 import { DataSource, Repository } from 'typeorm';
 import {
   Injectable,
+  NotFoundException,
   ConflictException,
+  UnauthorizedException,
   InternalServerErrorException,
 } from '@nestjs/common';
 import User from './user.entity';
 import { AuthCredentialsDto } from 'src/dto/auth-credentials.dto';
-import { hash } from 'src/util/encrypt';
+import { compare, hash } from 'src/util/encrypt';
 
 @Injectable()
 class UserRepository extends Repository<User> {
@@ -29,6 +31,28 @@ class UserRepository extends Repository<User> {
         throw new ConflictException('Username already exists!');
       }
       throw new InternalServerErrorException();
+    }
+  }
+
+  async login(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+    const { username, password } = authCredentialsDto;
+
+    try {
+      const user = await this.findOne({
+        where: {
+          username: username,
+        },
+      });
+      if (!user) {
+        throw new NotFoundException('User not found! Please register');
+      }
+      const password_hashed = user.password;
+      const matched = compare(password, password_hashed);
+      if (!matched) {
+        throw new UnauthorizedException('Password does not match');
+      }
+    } catch (error) {
+      throw error;
     }
   }
 }
