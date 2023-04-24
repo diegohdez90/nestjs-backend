@@ -4,9 +4,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
+import { DataSource } from 'typeorm';
+import { TasksModule } from './tasks.module';
 
 @Module({
   imports: [
+    TasksModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -18,7 +21,9 @@ import { TasksService } from './tasks.service';
       synchronize: true,
     }),
   ],
-  controllers: [AppController, TasksController],
-  providers: [AppService, TasksService],
+  controllers: [AppController],
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private dataSource: DataSource) {}
+}
