@@ -7,8 +7,12 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import User from './user.entity';
+import { JwtService } from '@nestjs/jwt';
 import { AuthCredentialsDto } from 'src/dto/auth-credentials.dto';
 import { compare, hash } from 'src/util/encrypt';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Injectable()
 class UserRepository extends Repository<User> {
@@ -34,7 +38,12 @@ class UserRepository extends Repository<User> {
     }
   }
 
-  async login(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+  async login(
+    authCredentialsDto: AuthCredentialsDto,
+    jwtService: JwtService,
+  ): Promise<{
+    accessToken: string;
+  }> {
     const { username, password } = authCredentialsDto;
 
     try {
@@ -51,6 +60,17 @@ class UserRepository extends Repository<User> {
       if (!matched) {
         throw new UnauthorizedException('Password does not match');
       }
+      const accessToken: string = jwtService.sign(
+        {
+          username: user.username,
+        },
+        {
+          secret: process.env.JWT_SECRET,
+        },
+      );
+      return {
+        accessToken,
+      };
     } catch (error) {
       throw error;
     }
