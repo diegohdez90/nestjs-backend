@@ -28,9 +28,21 @@
 
 ## Installation
 
-```bash
-$ npm install
+Run the docker compose with
+
 ```
+docker compose up
+```
+
+Navigate to localhost:5050 and create the server and database with the information provided at `docker-compose.yml` file.
+
+Create `.env` file with the following data
+
+```
+JWT_SECRET=
+```
+
+And, finally run the application.
 
 ## Running the app
 
